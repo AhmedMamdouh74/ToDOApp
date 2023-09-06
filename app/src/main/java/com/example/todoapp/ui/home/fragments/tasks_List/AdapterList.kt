@@ -74,7 +74,7 @@ class AdapterList(var tasks: MutableList<Task>?) : RecyclerView.Adapter<AdapterL
             itemBinding.todoTitleText.text = task.title
             itemBinding.todoDesc.text = task.description
             if (task.isDone == true) {
-                itemBinding.todoCheck.setBackgroundColor(Color.GREEN)
+                itemBinding.todoCheck.setBackgroundResource(R.drawable.ic_check_green_bg)
                 itemBinding.todoTitleText.setTextColor(Color.GREEN)
             }
         }

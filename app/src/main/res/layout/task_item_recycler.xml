@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@drawable/delete_item_bg"
-        android:paddingHorizontal="35dp"
+        android:paddingHorizontal="30dp"
         android:src="@drawable/ic_delete" />
 
     <androidx.cardview.widget.CardView
