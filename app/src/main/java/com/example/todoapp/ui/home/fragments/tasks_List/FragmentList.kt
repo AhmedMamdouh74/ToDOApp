@@ -28,8 +28,6 @@ class FragmentList : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
-
-
     }
 
     override fun onStart() {
@@ -37,16 +35,14 @@ class FragmentList : Fragment() {
         loadTasksFromDataBase()
     }
 
-
     fun loadTasksFromDataBase() {
         context?.let {
             val tasks =
-                TodoDatabase.getInstance(it).getTodosDao().getTasksByDate(selectedDay.timeInMillis)
+                TodoDatabase.getInstance(it).getTodosDao().getAllTasks()
             adapterList.bindTasks(tasks.toMutableList())
         }
 
     }
-
 
     fun deleteTasksFromDataBase(task: Task) {
         TodoDatabase.getInstance(requireContext())
@@ -67,7 +63,7 @@ class FragmentList : Fragment() {
 
     private fun initViews() {
         viewBinding.recyclerView.adapter = adapterList
-        adapterList.onItemDeleteListener = AdapterList.OnItemDeleteListener { position, task ->
+        adapterList.onItemDeleteListener = AdapterList.OnItemClickListener { position, task ->
             deleteTasksFromDataBase(task)
             adapterList.tasksDeleted(task)
         }
@@ -77,12 +73,33 @@ class FragmentList : Fragment() {
         viewBinding.calendarView.setOnDateChangedListener(OnDateSelectedListener { widget, date, selected ->
             if (selected) {
                 selectedDay.set(Calendar.YEAR, date.year)
-                selectedDay.set(Calendar.MONTH, date.month -1 )
+                selectedDay.set(Calendar.MONTH, date.month - 1)
                 selectedDay.set(Calendar.DAY_OF_MONTH, date.day)
                 // load tasks from selected date
                 loadTasksFromDataBase()
             }
         })
+        adapterList.onItemUpdateListener = AdapterList.OnItemClickListener { position, task ->
+//            updateTask(task)
+            makeDone(task)
+        }
+
 
     }
+
+    fun makeDone(task: Task) {
+        task.isDone = true
+        TodoDatabase.getInstance(requireContext())
+            .getTodosDao().updateTodo(task)
+       adapterList.notifyDataSetChanged()
+    }
+
+
+
+
+//    private fun updateTask(task: Task) {
+//        TodoDatabase.getInstance(requireContext()).getTodosDao().updateTodo(task)
+//        adapterList.taskUpdated(task)
+//
+//    }
 }

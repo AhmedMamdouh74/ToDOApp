@@ -1,5 +1,6 @@
 package com.example.todoapp.ui.home.fragments.tasks_List
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -19,34 +20,52 @@ class AdapterList(var tasks: MutableList<Task>?) : RecyclerView.Adapter<AdapterL
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(tasks!![position])
+//        if (tasks!![position].isDone == true) {
+//            holder.itemBinding.todoCheck.setBackgroundColor(Color.GREEN)
+//            holder.itemBinding.todoTitleText.setTextColor(Color.GREEN)
+//        }
+
 
         if (onItemDeleteListener != null) {
             holder.itemBinding.deleteItem.setOnLongClickListener {
                 holder.itemBinding.swipeLayout.close(true)
-                onItemDeleteListener?.onItemDelete(position, tasks!![position])
-           true }         }
+                onItemDeleteListener?.onItemClick(position, tasks!![position])
+                true
+            }
+        }
+        if (onItemUpdateListener != null) {
+            holder.itemBinding.todoCheck.setOnClickListener {
+                onItemUpdateListener?.onItemClick(position, tasks!![position])
+            }
+
+        }
 
     }
 
-    var onItemDeleteListener: OnItemDeleteListener? = null
+    var onItemUpdateListener: OnItemClickListener? = null
+    var onItemDeleteListener: OnItemClickListener? = null
 
-    fun interface OnItemDeleteListener {
-        fun onItemDelete(position: Int, task: Task)
+    fun interface OnItemClickListener {
+        fun onItemClick(position: Int, task: Task)
     }
 
     override fun getItemCount(): Int = tasks?.size ?: 0
-    fun bindTasks(tasks:MutableList<Task>) {
+    fun bindTasks(tasks: MutableList<Task>) {
         this.tasks = tasks
-       notifyDataSetChanged()
-    }
-
-    fun tasksDeleted(task: Task) {
-       // var position=tasks?.indexOf(task)
-        tasks?.remove(task)
-       // notifyItemChanged(position!!)
         notifyDataSetChanged()
     }
 
+    fun tasksDeleted(task: Task) {
+        //var position=tasks?.indexOf(task)
+        tasks?.remove(task)
+        //  notifyItemChanged(position!!)
+        notifyDataSetChanged()
+    }
+
+//    fun taskUpdated(task: Task) {
+//        tasks.add
+//
+//    }
 
 
     class ViewHolder(val itemBinding: TaskItemRecyclerBinding) :
@@ -54,6 +73,10 @@ class AdapterList(var tasks: MutableList<Task>?) : RecyclerView.Adapter<AdapterL
         fun bind(task: Task) {
             itemBinding.todoTitleText.text = task.title
             itemBinding.todoDesc.text = task.description
+            if (task.isDone == true) {
+                itemBinding.todoCheck.setBackgroundColor(Color.GREEN)
+                itemBinding.todoTitleText.setTextColor(Color.GREEN)
+            }
         }
 
 

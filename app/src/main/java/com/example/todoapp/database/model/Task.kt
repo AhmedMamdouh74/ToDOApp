@@ -14,7 +14,7 @@ class Task(
     @ColumnInfo
     val description:String?=null,
     @ColumnInfo
-    val isDone:Boolean?=null,
+    var isDone:Boolean?=null,
     @ColumnInfo
     val dateTime:Long?=null
 )
