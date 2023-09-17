@@ -32,20 +32,30 @@ class AddTaskFragment : BottomSheetDialogFragment() {
         viewBinding.dateContainer.setOnClickListener {
             showDatePickerDailog()
         }
+      //  showDate()
+
     }
 
-    val calender = Calendar.getInstance()
+    private fun showDate() {
+        viewBinding.date.text =
+            "${calendar.get(Calendar.DAY_OF_MONTH)} / ${calendar.get(Calendar.MONTH) + 1} / ${
+                calendar.get(Calendar.YEAR)
+            }"
+    }
+
+    var calendar = Calendar.getInstance()
     private fun showDatePickerDailog() {
+
         context?.let {
             val dilog = DatePickerDialog(it)
-            dilog.setOnDateSetListener { datePicker, dayOfMonth, month, year ->
-                viewBinding.date.text = "$dayOfMonth-$month-$year"
-                calender.set(dayOfMonth, month, year)
+            dilog.setOnDateSetListener { datePicker, year, month, dayOfMonth ->
+                viewBinding.date.text = "$dayOfMonth / ${month+1} / $year"
+                calendar.set(dayOfMonth, month, year)
                 // to ignore time
-                calender.set(Calendar.HOUR_OF_DAY, 0)
-                calender.set(Calendar.MINUTE, 0)
-                calender.set(Calendar.SECOND, 0)
-                calender.set(Calendar.MILLISECOND, 0)
+                calendar.set(Calendar.HOUR_OF_DAY, 0)
+                calendar.set(Calendar.MINUTE, 0)
+                calendar.set(Calendar.SECOND, 0)
+                calendar.set(Calendar.MILLISECOND, 0)
 
             }
 
@@ -86,7 +96,7 @@ class AddTaskFragment : BottomSheetDialogFragment() {
         val task = Task(
             title = viewBinding.title.text.toString(),
             description = viewBinding.desc.text.toString(),
-            dateTime = calender.timeInMillis
+            dateTime = calendar.timeInMillis
         )
         TodoDatabase.getInstance(requireContext()).getTodosDao().insertTodo(task)
         onTaskAddedListener?.onTaskAdded()

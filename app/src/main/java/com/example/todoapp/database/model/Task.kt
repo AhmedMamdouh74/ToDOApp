@@ -10,11 +10,11 @@ class Task(
     @ColumnInfo(name = "iD")
     val id:Int?=null,
     @ColumnInfo
-    val title:String?=null,
+    var title:String?=null,
     @ColumnInfo
-    val description:String?=null,
+    var description:String?=null,
     @ColumnInfo
-    val isDone:Boolean?=null,
+    var isDone:Boolean?=null,
     @ColumnInfo
     val dateTime:Long?=null
-)
+):java.io.Serializable

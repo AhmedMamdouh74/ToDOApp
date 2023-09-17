@@ -1,5 +1,6 @@
 package com.example.todoapp.ui.home.fragments.tasks_List
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -7,8 +8,10 @@ import androidx.viewbinding.ViewBinding
 import com.example.todoapp.R
 import com.example.todoapp.database.model.Task
 import com.example.todoapp.databinding.TaskItemRecyclerBinding
+import com.zerobranch.layout.SwipeLayout
+import com.zerobranch.layout.SwipeLayout.SwipeActionsListener
 
-class AdapterList(var tasks: List<Task>?) : RecyclerView.Adapter<AdapterList.ViewHolder>() {
+class AdapterList(var tasks: MutableList<Task>?) : RecyclerView.Adapter<AdapterList.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         var itemBinding =
             TaskItemRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -17,12 +20,58 @@ class AdapterList(var tasks: List<Task>?) : RecyclerView.Adapter<AdapterList.Vie
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(tasks!![position])
+//        if (tasks!![position].isDone == true) {
+//            holder.itemBinding.todoCheck.setBackgroundColor(Color.GREEN)
+//            holder.itemBinding.todoTitleText.setTextColor(Color.GREEN)
+//        }
 
+
+        if (onItemDeleteListener != null) {
+            holder.itemBinding.deleteItem.setOnLongClickListener {
+                holder.itemBinding.swipeLayout.close(true)
+                onItemDeleteListener?.onItemClick(position, tasks!![position])
+                true
+            }
+        }
+        if (onItemUpdateListener != null) {
+            holder.itemBinding.todoCheck.setOnClickListener {
+                onItemUpdateListener?.onItemClick(position, tasks!![position])
+            }
+
+        }
+        if (onItemEditListener != null) {
+            holder.itemBinding.todoTitleText.setOnClickListener {
+                onItemEditListener?.onItemClick(position, tasks!![position])
+
+            }
+        }
+        if (onItemClickListener!=null){
+            holder.itemBinding.todoDesc.setOnClickListener {
+                onItemClickListener?.onItemClick(position, tasks!![position])
+            }
+        }
+
+    }
+    var onItemClickListener:OnItemClickListener?=null
+
+    var onItemEditListener: OnItemClickListener? = null
+    var onItemUpdateListener: OnItemClickListener? = null
+    var onItemDeleteListener: OnItemClickListener? = null
+
+    fun interface OnItemClickListener {
+        fun onItemClick(position: Int, task: Task)
     }
 
     override fun getItemCount(): Int = tasks?.size ?: 0
-    fun bindTasks(tasks: List<Task>) {
+    fun bindTasks(tasks: MutableList<Task>) {
         this.tasks = tasks
+        notifyDataSetChanged()
+    }
+
+    fun tasksDeleted(task: Task) {
+        //var position=tasks?.indexOf(task)
+        tasks?.remove(task)
+        //  notifyItemChanged(position!!)
         notifyDataSetChanged()
     }
 
@@ -32,6 +81,11 @@ class AdapterList(var tasks: List<Task>?) : RecyclerView.Adapter<AdapterList.Vie
         fun bind(task: Task) {
             itemBinding.todoTitleText.text = task.title
             itemBinding.todoDesc.text = task.description
+            if (task.isDone == true) {
+                itemBinding.todoCheck.setBackgroundResource(R.drawable.ic_check_green_bg)
+                itemBinding.todoTitleText.setTextColor(Color.GREEN)
+                itemBinding.verticalLine.setBackgroundColor(Color.GREEN)
+            }
         }
 
 

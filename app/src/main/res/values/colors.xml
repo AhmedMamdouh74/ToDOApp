@@ -6,4 +6,7 @@
     <color name="blue">#5D9CEC</color>
     <color name="icon_selector">#C8C9CB</color>
     <color name="grey">#200E32</color>
+    <color name="red_color">#ff5722</color>
+    <color name="bg_color">#DFECDB</color>
+    <color name="green">#61E757</color>
 </resources>
