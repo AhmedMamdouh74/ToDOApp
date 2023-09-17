@@ -2,14 +2,11 @@ package com.example.todoapp.ui.home.fragments.tasks_List
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
-
 import com.example.todoapp.constance.constance
 import com.example.todoapp.database.TodoDatabase
 import com.example.todoapp.database.model.Task
@@ -25,7 +22,7 @@ class FragmentList : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewBinding = FragmentTasksListBinding.inflate(layoutInflater, container, false)
         return viewBinding.root
     }
@@ -44,7 +41,11 @@ class FragmentList : Fragment() {
     fun loadTasksFromDataBase() {
         context?.let {
             val tasks =
-                TodoDatabase.getInstance(it).getTodosDao().getAllTasks()
+              //  TodoDatabase.getInstance(it).getTodosDao().getAllTasks()
+                TodoDatabase.getInstance(it).getTodosDao().getTasksByDate(selectedDay.timeInMillis)
+
+
+
             adapterList.bindTasks(tasks.toMutableList())
 
         }
@@ -93,7 +94,7 @@ class FragmentList : Fragment() {
             updateTask(task)
 
         }
-        adapterList.onItemClickListener=AdapterList.OnItemClickListener { position, task ->
+        adapterList.onItemClickListener = AdapterList.OnItemClickListener { position, task ->
             updateTask(task)
         }
 
@@ -109,7 +110,7 @@ class FragmentList : Fragment() {
 
 
     private fun updateTask(task: Task) {
-        var intent = Intent(requireContext(), EditActivity::class.java)
+        val intent = Intent(requireContext(), EditActivity::class.java)
         intent.putExtra(constance.task_key, task)
         startActivity(intent)
     }
