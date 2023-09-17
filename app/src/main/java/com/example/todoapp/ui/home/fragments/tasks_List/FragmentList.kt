@@ -1,15 +1,20 @@
 package com.example.todoapp.ui.home.fragments.tasks_List
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+
+import com.example.todoapp.constance.constance
 import com.example.todoapp.database.TodoDatabase
 import com.example.todoapp.database.model.Task
 import com.example.todoapp.databinding.FragmentTasksListBinding
+import com.example.todoapp.ui.edit.EditActivity
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import java.util.Calendar
@@ -35,11 +40,13 @@ class FragmentList : Fragment() {
         loadTasksFromDataBase()
     }
 
+
     fun loadTasksFromDataBase() {
         context?.let {
             val tasks =
                 TodoDatabase.getInstance(it).getTodosDao().getAllTasks()
             adapterList.bindTasks(tasks.toMutableList())
+
         }
 
     }
@@ -80,8 +87,14 @@ class FragmentList : Fragment() {
             }
         })
         adapterList.onItemUpdateListener = AdapterList.OnItemClickListener { position, task ->
-//            updateTask(task)
             makeDone(task)
+        }
+        adapterList.onItemEditListener = AdapterList.OnItemClickListener { position, task ->
+            updateTask(task)
+
+        }
+        adapterList.onItemClickListener=AdapterList.OnItemClickListener { position, task ->
+            updateTask(task)
         }
 
 
@@ -91,15 +104,22 @@ class FragmentList : Fragment() {
         task.isDone = true
         TodoDatabase.getInstance(requireContext())
             .getTodosDao().updateTodo(task)
-       adapterList.notifyDataSetChanged()
+        adapterList.notifyDataSetChanged()
     }
 
 
+    private fun updateTask(task: Task) {
+        var intent = Intent(requireContext(), EditActivity::class.java)
+        intent.putExtra(constance.task_key, task)
+        startActivity(intent)
+    }
 
-
-//    private fun updateTask(task: Task) {
-//        TodoDatabase.getInstance(requireContext()).getTodosDao().updateTodo(task)
-//        adapterList.taskUpdated(task)
-//
-//    }
 }
+
+
+
+
+
+
+
+

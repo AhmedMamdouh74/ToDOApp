@@ -39,9 +39,22 @@ class AdapterList(var tasks: MutableList<Task>?) : RecyclerView.Adapter<AdapterL
             }
 
         }
+        if (onItemEditListener != null) {
+            holder.itemBinding.todoTitleText.setOnClickListener {
+                onItemEditListener?.onItemClick(position, tasks!![position])
+
+            }
+        }
+        if (onItemClickListener!=null){
+            holder.itemBinding.todoDesc.setOnClickListener {
+                onItemClickListener?.onItemClick(position, tasks!![position])
+            }
+        }
 
     }
+    var onItemClickListener:OnItemClickListener?=null
 
+    var onItemEditListener: OnItemClickListener? = null
     var onItemUpdateListener: OnItemClickListener? = null
     var onItemDeleteListener: OnItemClickListener? = null
 
@@ -62,11 +75,6 @@ class AdapterList(var tasks: MutableList<Task>?) : RecyclerView.Adapter<AdapterL
         notifyDataSetChanged()
     }
 
-//    fun taskUpdated(task: Task) {
-//        tasks.add
-//
-//    }
-
 
     class ViewHolder(val itemBinding: TaskItemRecyclerBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
@@ -76,6 +84,7 @@ class AdapterList(var tasks: MutableList<Task>?) : RecyclerView.Adapter<AdapterL
             if (task.isDone == true) {
                 itemBinding.todoCheck.setBackgroundResource(R.drawable.ic_check_green_bg)
                 itemBinding.todoTitleText.setTextColor(Color.GREEN)
+                itemBinding.verticalLine.setBackgroundColor(Color.GREEN)
             }
         }
 
