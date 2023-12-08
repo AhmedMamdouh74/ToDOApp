@@ -22,7 +22,7 @@ class HomeActivity : AppCompatActivity() {
         viewBinding.bottomNavigation.setOnItemSelectedListener {
             fragmentListRef = FragmentList()
             if (it.itemId == R.id.navigatoin_list) {
-                showFragment(fragmentListRef!!)
+                showFragment(FragmentList())
             } else if (it.itemId == R.id.navigation_setting) {
                 showFragment(FragmentSettings())
             }

@@ -66,6 +66,7 @@ class EditActivity : AppCompatActivity() {
         return isValid
 
     }
+
     fun updateTodo() {
         if (valid() == false) {
             return

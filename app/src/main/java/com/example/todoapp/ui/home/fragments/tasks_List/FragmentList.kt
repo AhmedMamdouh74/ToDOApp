@@ -32,6 +32,7 @@ class FragmentList : Fragment() {
         initViews()
     }
 
+
     override fun onStart() {
         super.onStart()
         loadTasksFromDataBase()
@@ -43,9 +44,6 @@ class FragmentList : Fragment() {
             val tasks =
               //  TodoDatabase.getInstance(it).getTodosDao().getAllTasks()
                 TodoDatabase.getInstance(it).getTodosDao().getTasksByDate(selectedDay.timeInMillis)
-
-
-
             adapterList.bindTasks(tasks.toMutableList())
 
         }
@@ -57,6 +55,7 @@ class FragmentList : Fragment() {
             .getTodosDao()
             .deleteTodo(task)
         Toast.makeText(requireContext(), "Task Deleted !!", Toast.LENGTH_LONG).show()
+        adapterList.tasksDeleted(task)
     }
 
     private val adapterList = AdapterList(null)
@@ -86,6 +85,7 @@ class FragmentList : Fragment() {
                 // load tasks from selected date
                 loadTasksFromDataBase()
             }
+
         })
         adapterList.onItemUpdateListener = AdapterList.OnItemClickListener { position, task ->
             makeDone(task)
@@ -94,9 +94,12 @@ class FragmentList : Fragment() {
             updateTask(task)
 
         }
+        // just to make click
         adapterList.onItemClickListener = AdapterList.OnItemClickListener { position, task ->
             updateTask(task)
+
         }
+
 
 
     }

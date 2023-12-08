@@ -9,11 +9,16 @@ import android.widget.DatePicker
 import com.example.todoapp.database.TodoDatabase
 import com.example.todoapp.database.model.Task
 import com.example.todoapp.databinding.FragmentAddTaskBinding
+import com.example.todoapp.ui.home.fragments.tasks_List.AdapterList
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.util.Calendar
 
 class AddTaskFragment : BottomSheetDialogFragment() {
     lateinit var viewBinding: FragmentAddTaskBinding
+
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,29 +33,27 @@ class AddTaskFragment : BottomSheetDialogFragment() {
         viewBinding.addTaskBtn.setOnClickListener {
 
             createTask()
+
+
         }
         viewBinding.dateContainer.setOnClickListener {
-            showDatePickerDailog()
+            showDatePickerDialog()
         }
-      //  showDate()
+
 
     }
 
-    private fun showDate() {
-        viewBinding.date.text =
-            "${calendar.get(Calendar.DAY_OF_MONTH)} / ${calendar.get(Calendar.MONTH) + 1} / ${
-                calendar.get(Calendar.YEAR)
-            }"
-    }
 
     var calendar = Calendar.getInstance()
-    private fun showDatePickerDailog() {
+    private fun showDatePickerDialog() {
 
         context?.let {
-            val dilog = DatePickerDialog(it)
-            dilog.setOnDateSetListener { datePicker, year, month, dayOfMonth ->
+            val dialog = DatePickerDialog(it)
+            dialog.setOnDateSetListener { datePicker, year, month, dayOfMonth ->
                 viewBinding.date.text = "$dayOfMonth / ${month+1} / $year"
-                calendar.set(dayOfMonth, month, year)
+                calendar.set(Calendar.MONTH, month)
+                calendar.set(Calendar.YEAR, year)
+                calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth)
                 // to ignore time
                 calendar.set(Calendar.HOUR_OF_DAY, 0)
                 calendar.set(Calendar.MINUTE, 0)
@@ -59,7 +62,7 @@ class AddTaskFragment : BottomSheetDialogFragment() {
 
             }
 
-            dilog.show()
+            dialog.show()
         }
 
 
@@ -90,6 +93,7 @@ class AddTaskFragment : BottomSheetDialogFragment() {
     }
 
     private fun createTask() {
+
         if (!valid()) {
             return
         }
